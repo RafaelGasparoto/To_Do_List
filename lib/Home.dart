@@ -1,4 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'package:async/async.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -8,7 +12,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<String> _tasks = ["a", "b", "c"];
+  List _tasks = [];
+
+  Future<File> _getFile()async{
+    Directory directory = await getApplicationDocumentsDirectory();
+    return File('${directory.path}/data.json');
+  }
+
+  _saveTask() async {
+    var file = await _getFile();
+
+    Map<String, dynamic> task = Map();
+    task['title'] = 'something';
+    task['done'] = false;
+    _tasks.add(task);
+
+    String data = json.encode(_tasks);
+    file.writeAsString(data);
+  }
+
+  loadTask() async {
+    var file = await _getFile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +43,7 @@ class _HomeState extends State<Home> {
         title: const Text("ToDo List"),
       ),
       floatingActionButton: FloatingActionButton(
-        elevation: 10,
+        elevation: 8,
         onPressed: () {
           showDialog(
             context: context,
@@ -30,8 +55,13 @@ class _HomeState extends State<Home> {
                   decoration: const InputDecoration(hintText: "New tasks"),
                 ),
                 actions: [
-                  TextButton(onPressed: () {}, child: const Text("Salvar")),
-                  TextButton(onPressed: () {}, child: const Text("Cancelar")),
+                  TextButton(onPressed: () {
+                    Navigator.pop(context);
+                    _saveTask();
+                  }, child: const Text("Salvar")),
+                  TextButton(onPressed: () {
+                    Navigator.pop(context);
+                  }, child: const Text("Cancelar")),
                 ],
               );
             },
