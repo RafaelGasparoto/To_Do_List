@@ -113,8 +113,28 @@ class _HomeState extends State<Home> {
               itemCount: _tasks.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onDoubleTap: (){
-                    _deleteTask(index);
+                  onDoubleTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Are you sure you want to delete this task?",style: TextStyle(), textAlign: TextAlign.center,),
+                            actionsAlignment: MainAxisAlignment.spaceAround,
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    _deleteTask(index);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Yes")),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("No")),
+                            ],
+                          );
+                        });
                   },
                   child: CheckboxListTile(
                     title: Text(_tasks[index]['title'].toString()),
