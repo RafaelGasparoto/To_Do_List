@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
   _saveTask() async {
     Map<String, dynamic> task = Map();
     task['title'] = _controller.text;
-    task['done'] = false;
+    task['status'] = false;
 
     setState(() {
       _tasks.add(task);
@@ -30,6 +30,13 @@ class _HomeState extends State<Home> {
 
     _saveFile();
     _controller.text = '';
+  }
+
+  _deleteTask(int index) async {
+    setState(() {
+      _tasks.removeAt(index);
+    });
+    _saveFile();
   }
 
   _saveFile() async {
@@ -63,7 +70,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("ToDo List"),
+        title: const Text("To do List"),
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 8,
@@ -84,12 +91,12 @@ class _HomeState extends State<Home> {
                         Navigator.pop(context);
                         _saveTask();
                       },
-                      child: const Text("Salvar")),
+                      child: const Text("Save")),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("Cancelar")),
+                      child: const Text("Cancel")),
                 ],
               );
             },
@@ -105,15 +112,20 @@ class _HomeState extends State<Home> {
             child: ListView.builder(
               itemCount: _tasks.length,
               itemBuilder: (context, index) {
-                return CheckboxListTile(
-                  title: Text(_tasks[index]['title'].toString()),
-                  value: _tasks[index]['done'],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _tasks[index]['done'] = value;
-                    });
-                    _saveFile();
+                return GestureDetector(
+                  onDoubleTap: (){
+                    _deleteTask(index);
                   },
+                  child: CheckboxListTile(
+                    title: Text(_tasks[index]['title'].toString()),
+                    value: _tasks[index]['status'],
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _tasks[index]['status'] = value;
+                      });
+                      _saveFile();
+                    },
+                  ),
                 );
               },
             ),
