@@ -108,7 +108,12 @@ class _HomeState extends State<Home> {
                 return CheckboxListTile(
                   title: Text(_tasks[index]['title'].toString()),
                   value: _tasks[index]['done'],
-                  onChanged: (bool? value) {},
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tasks[index]['done'] = value;
+                    });
+                    _saveFile();
+                  },
                 );
               },
             ),
