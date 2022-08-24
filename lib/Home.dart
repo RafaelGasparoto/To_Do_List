@@ -12,7 +12,36 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todo List"),
+        centerTitle: true,
+        title: const Text("ToDo List"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 10,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("To do"),
+                content: TextField(
+                  onChanged: (text){
+
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "New tasks"
+                  ),
+                ),
+                actions: [
+                  TextButton(onPressed: (){}, child: const Text("Salvar")),
+                  TextButton(onPressed: (){}, child: const Text("Cancelar")),
+                ],
+              );
+            },
+          );
+        },
+        foregroundColor: Colors.purple,
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.add),
       ),
     );
   }
