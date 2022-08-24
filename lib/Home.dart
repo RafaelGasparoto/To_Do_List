@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import 'package:async/async.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,26 +12,50 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List _tasks = [];
+  final TextEditingController _controller = TextEditingController();
 
-  Future<File> _getFile()async{
+  Future<File> _getFile() async {
     Directory directory = await getApplicationDocumentsDirectory();
     return File('${directory.path}/data.json');
   }
 
   _saveTask() async {
-    var file = await _getFile();
-
     Map<String, dynamic> task = Map();
-    task['title'] = 'something';
+    task['title'] = _controller.text;
     task['done'] = false;
-    _tasks.add(task);
 
+    setState(() {
+      _tasks.add(task);
+    });
+
+    _saveFile();
+    _controller.text = '';
+  }
+
+  _saveFile() async {
+    var file = await _getFile();
     String data = json.encode(_tasks);
+
     file.writeAsString(data);
   }
 
-  loadTask() async {
-    var file = await _getFile();
+  _loadFile() async {
+    try {
+      var file = await _getFile();
+      return file.readAsString();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFile().then((data) {
+      setState(() {
+        _tasks = jsonDecode(data);
+      });
+    });
   }
 
   @override
@@ -51,17 +74,22 @@ class _HomeState extends State<Home> {
               return AlertDialog(
                 title: const Text("To do"),
                 content: TextField(
+                  controller: _controller,
                   onChanged: (text) {},
                   decoration: const InputDecoration(hintText: "New tasks"),
                 ),
                 actions: [
-                  TextButton(onPressed: () {
-                    Navigator.pop(context);
-                    _saveTask();
-                  }, child: const Text("Salvar")),
-                  TextButton(onPressed: () {
-                    Navigator.pop(context);
-                  }, child: const Text("Cancelar")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _saveTask();
+                      },
+                      child: const Text("Salvar")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Cancelar")),
                 ],
               );
             },
@@ -77,8 +105,10 @@ class _HomeState extends State<Home> {
             child: ListView.builder(
               itemCount: _tasks.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_tasks[index]),
+                return CheckboxListTile(
+                  title: Text(_tasks[index]['title'].toString()),
+                  value: _tasks[index]['done'],
+                  onChanged: (bool? value) {},
                 );
               },
             ),
