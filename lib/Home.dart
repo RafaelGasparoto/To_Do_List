@@ -8,6 +8,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<String> _tasks = ["a", "b", "c"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,16 +26,12 @@ class _HomeState extends State<Home> {
               return AlertDialog(
                 title: const Text("To do"),
                 content: TextField(
-                  onChanged: (text){
-
-                  },
-                  decoration: const InputDecoration(
-                    hintText: "New tasks"
-                  ),
+                  onChanged: (text) {},
+                  decoration: const InputDecoration(hintText: "New tasks"),
                 ),
                 actions: [
-                  TextButton(onPressed: (){}, child: const Text("Salvar")),
-                  TextButton(onPressed: (){}, child: const Text("Cancelar")),
+                  TextButton(onPressed: () {}, child: const Text("Salvar")),
+                  TextButton(onPressed: () {}, child: const Text("Cancelar")),
                 ],
               );
             },
@@ -42,6 +40,20 @@ class _HomeState extends State<Home> {
         foregroundColor: Colors.purple,
         backgroundColor: Colors.red,
         child: const Icon(Icons.add),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: _tasks.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_tasks[index]),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
