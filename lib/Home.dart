@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        elevation: 8,
+        elevation: 10,
         onPressed: () {
           showDialog(
             context: context,
@@ -179,12 +179,12 @@ class _HomeState extends State<Home> {
           );
         },
         foregroundColor: Colors.black,
-        backgroundColor: const Color(0xff28B5F1),
+        backgroundColor: const Color(0xff4CDBF2),
         child: const Icon(Icons.add),
       ),
       body: Container(
         color: Colors.white,
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.only(top: 30, bottom: 30, right: 10, left: 10),
         child: Column(
           children: [
             const Text(
@@ -212,9 +212,9 @@ class _HomeState extends State<Home> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: const Text(
-                                      "Are you sure you want to delete this task?",
-                                      style: TextStyle(
+                                    title: Text(
+                                      "Are you sure you want to delete '${_tasks[index]['title']}' task?",
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.center,
                                     ),
@@ -240,17 +240,20 @@ class _HomeState extends State<Home> {
                                   );
                                 });
                           },
-                          child: CheckboxListTile(
-                            title: Text(
-                              _tasks[index]['title'].toString(),
-                              style: const TextStyle(
-                                  letterSpacing: 1, fontSize: 17),
+                          child: Theme(
+                            data: ThemeData(unselectedWidgetColor: const Color(0xff4CDBF2)),
+                            child: CheckboxListTile(
+                              title: Text(
+                                _tasks[index]['title'].toString(),
+                                style: const TextStyle(
+                                    letterSpacing: 1, fontSize: 17),
+                              ),
+                              value: _tasks[index]['status'],
+                              onChanged: (bool? value) {
+                                _changeTaskStatus(index, 0);
+                                _deleteTask(index, 0);
+                              },
                             ),
-                            value: _tasks[index]['status'],
-                            onChanged: (bool? value) {
-                              _changeTaskStatus(index, 0);
-                              _deleteTask(index, 0);
-                            },
                           ),
                         ),
                       ),
@@ -286,7 +289,7 @@ class _HomeState extends State<Home> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "Are you sure you want to delete this task?",
+                                      "Are you sure you want to delete '${_tasksCompleted[index]['title']}' task?",
                                       style: GoogleFonts.indieFlower(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -313,6 +316,8 @@ class _HomeState extends State<Home> {
                                 });
                           },
                           child: CheckboxListTile(
+                            activeColor: const Color(0xff4CDBF2),
+                            checkColor: Colors.black,
                             title: Text(
                                 _tasksCompleted[index]['title'].toString(),
                                 style: const TextStyle(
