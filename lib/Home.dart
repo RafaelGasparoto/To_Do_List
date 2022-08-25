@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
   }
 
   _createTask() async {
-    Map<String, dynamic> task = Map();
+    Map<String, dynamic> task = {};
     task['title'] = _controller.text;
     task['status'] = false;
     task['favorite'] = false;
@@ -40,16 +40,16 @@ class _HomeState extends State<Home> {
   _changeTaskStatus(int index, int who) async {
     if (who == 0) {
       _tasks[index]['status'] = true;
-      if(_tasks[index]['favorite']) {
+      if (_tasks[index]['favorite']) {
         _tasksCompleted.insert(0, _tasks[index]);
-      }else{
+      } else {
         _tasksCompleted.add(_tasks[index]);
       }
     } else {
       _tasksCompleted[index]['status'] = false;
-      if(_tasksCompleted[index]['favorite']) {
+      if (_tasksCompleted[index]['favorite']) {
         _tasks.insert(0, _tasksCompleted[index]);
-      }else {
+      } else {
         _tasks.add(_tasksCompleted[index]);
       }
     }
@@ -88,22 +88,22 @@ class _HomeState extends State<Home> {
 
   _favoriteTask(index, who) async {
     setState(() {
-      if(who == 0){
+      if (who == 0) {
         var task = _tasks[index];
         _tasks.removeAt(index);
 
-        if(task['favorite'] == true) {
+        if (task['favorite'] == true) {
           task['favorite'] = false;
           _tasks.add(task);
         } else {
           task['favorite'] = true;
           _tasks.insert(0, task);
         }
-      }else{
+      } else {
         var task = _tasksCompleted[index];
         _tasksCompleted.removeAt(index);
 
-        if(task['favorite'] == true) {
+        if (task['favorite'] == true) {
           task['favorite'] = false;
           _tasksCompleted.add(task);
         } else {
@@ -139,11 +139,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("To do List"),
-        backgroundColor: const Color(0xff523961),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         elevation: 8,
@@ -152,7 +147,11 @@ class _HomeState extends State<Home> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text("To do", style: GoogleFonts.indieFlower(),),
+                title: const Text(
+                  "To do",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
                 content: TextField(
                   controller: _controller,
                   onChanged: (text) {},
@@ -161,27 +160,31 @@ class _HomeState extends State<Home> {
                 actions: [
                   TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
-                        _createTask();
+                        if (_controller.text.isNotEmpty) {
+                          Navigator.pop(context);
+                          _createTask();
+                        }
                       },
-                      child: const Text("Save")),
+                      child:
+                          const Text("Save", style: TextStyle(fontSize: 20))),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("Cancel")),
+                      child:
+                          const Text("Cancel", style: TextStyle(fontSize: 20))),
                 ],
               );
             },
           );
         },
         foregroundColor: Colors.black,
-        backgroundColor: const Color(0xffb380cc),
+        backgroundColor: const Color(0xff28B5F1),
         child: const Icon(Icons.add),
       ),
       body: Container(
-        color: const Color(0xffbaafc4),
-        padding: const EdgeInsets.all(15),
+        color: Colors.white,
+        padding: const EdgeInsets.all(30),
         child: Column(
           children: [
             const Text(
@@ -211,7 +214,8 @@ class _HomeState extends State<Home> {
                                   return AlertDialog(
                                     title: const Text(
                                       "Are you sure you want to delete this task?",
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.center,
                                     ),
                                     actionsAlignment:
@@ -222,18 +226,26 @@ class _HomeState extends State<Home> {
                                             _deleteTask(index, 0);
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("Yes", style: TextStyle(fontSize: 20),)),
+                                          child: const Text(
+                                            "Yes",
+                                            style: TextStyle(fontSize: 20),
+                                          )),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("No", style: TextStyle(fontSize: 20))),
+                                          child: const Text("No",
+                                              style: TextStyle(fontSize: 20))),
                                     ],
                                   );
                                 });
                           },
                           child: CheckboxListTile(
-                            title: Text(_tasks[index]['title'].toString(), style: const TextStyle(letterSpacing: 1, fontSize: 17),),
+                            title: Text(
+                              _tasks[index]['title'].toString(),
+                              style: const TextStyle(
+                                  letterSpacing: 1, fontSize: 17),
+                            ),
                             value: _tasks[index]['status'],
                             onChanged: (bool? value) {
                               _changeTaskStatus(index, 0);
@@ -288,19 +300,23 @@ class _HomeState extends State<Home> {
                                             _deleteTask(index, 1);
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("Yes", style: TextStyle(fontSize: 20))),
+                                          child: const Text("Yes",
+                                              style: TextStyle(fontSize: 20))),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("No", style: TextStyle(fontSize: 20))),
+                                          child: const Text("No",
+                                              style: TextStyle(fontSize: 20))),
                                     ],
                                   );
                                 });
                           },
                           child: CheckboxListTile(
                             title: Text(
-                                _tasksCompleted[index]['title'].toString(), style: const TextStyle(letterSpacing: 1, fontSize: 17)),
+                                _tasksCompleted[index]['title'].toString(),
+                                style: const TextStyle(
+                                    letterSpacing: 1, fontSize: 17)),
                             value: _tasksCompleted[index]['status'],
                             onChanged: (bool? value) {
                               _changeTaskStatus(index, 1);
@@ -318,7 +334,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: const Color(0xff523961),
+        color: const Color(0xff4CDBF2),
         shape: const CircularNotchedRectangle(),
         child: Row(
           children: [
