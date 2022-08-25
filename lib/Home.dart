@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
     Map<String, dynamic> task = Map();
     task['title'] = _controller.text;
     task['status'] = false;
+    task['favorite'] = false;
 
     setState(() {
       _tasks.add(task);
@@ -74,6 +75,16 @@ class _HomeState extends State<Home> {
     } catch (e) {
       return null;
     }
+  }
+
+  _favorite(index) async {
+    setState(() {
+      var task = _tasks[index];
+      task['favorite'] = true;
+      _tasks.removeAt(index);
+      _tasks.insert(0, task);
+    });
+    _saveFile();
   }
 
   @override
@@ -157,7 +168,12 @@ class _HomeState extends State<Home> {
                   return Row(
                     children: [
                       IconButton(
-                          onPressed: () {}, icon: Icon(EvaIcons.heart)),
+                          onPressed: () {
+                            _favorite(index);
+                          },
+                          icon: _tasks[index]['favorite']
+                              ? const Icon(EvaIcons.heart)
+                              : const Icon(EvaIcons.heartOutline)),
                       Expanded(
                         child: GestureDetector(
                           onDoubleTap: () {
@@ -215,7 +231,12 @@ class _HomeState extends State<Home> {
                   return Row(
                     children: [
                       IconButton(
-                          onPressed: () {}, icon: Icon(EvaIcons.heartOutline)),
+                          onPressed: () {
+                            _favorite(index);
+                          },
+                          icon: _tasks[index]['favorite']
+                              ? const Icon(EvaIcons.heart)
+                              : const Icon(EvaIcons.heartOutline)),
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
