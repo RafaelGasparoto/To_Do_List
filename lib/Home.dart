@@ -11,8 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List _tasks = [];
-  List _tasksCompleted = [];
+  final List _tasks = [];
+  final List _tasksCompleted = [];
 
   final TextEditingController _controller = TextEditingController();
 
@@ -63,10 +63,6 @@ class _HomeState extends State<Home> {
       String dataTasksCompleted = json.encode(_tasksCompleted);
       file.writeAsString(dataTasksCompleted);
     }
-    if (_tasks.isNotEmpty) {
-      String dataTasks = json.encode(_tasks);
-      file.writeAsString(dataTasks);
-    }
   }
 
   _loadFile() async {
@@ -81,19 +77,22 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _loadFile().then((data) {
-      setState(() {
-        Map<String, dynamic> task = Map();
-        task['title'] = jsonDecode(data['title']);
-        task['status'] = jsonDecode(data['status']);
-
-        if (task['status'] == false) {
-          _tasks.add(task);
-        } else {
-          _tasksCompleted.add(task);
-        }
-      });
-    });
+    _loadFile().then(
+      (data) {
+        setState(
+          () {
+            List task = json.decode(data);
+            for (var i = 0; i < task.length; i++) {
+              if (task[i]['status'] == false) {
+                _tasks.add(task[i]);
+              } else {
+                _tasksCompleted.add(task[i]);
+              }
+            }
+          },
+        );
+      },
+    );
   }
 
   @override
