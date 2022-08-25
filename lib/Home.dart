@@ -186,7 +186,7 @@ class _HomeState extends State<Home> {
           children: [
             const Text(
               "To Do",
-              style: TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             Expanded(
               flex: 1,
@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
                                   return AlertDialog(
                                     title: const Text(
                                       "Are you sure you want to delete this task?",
-                                      style: TextStyle(),
+                                      style: TextStyle(fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.center,
                                     ),
                                     actionsAlignment:
@@ -222,18 +222,18 @@ class _HomeState extends State<Home> {
                                             _deleteTask(index, 0);
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("Yes")),
+                                          child: const Text("Yes", style: TextStyle(fontSize: 20),)),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("No")),
+                                          child: const Text("No", style: TextStyle(fontSize: 20))),
                                     ],
                                   );
                                 });
                           },
                           child: CheckboxListTile(
-                            title: Text(_tasks[index]['title'].toString()),
+                            title: Text(_tasks[index]['title'].toString(), style: const TextStyle(letterSpacing: 1, fontSize: 17),),
                             value: _tasks[index]['status'],
                             onChanged: (bool? value) {
                               _changeTaskStatus(index, 0);
@@ -249,7 +249,7 @@ class _HomeState extends State<Home> {
             ),
             const Text(
               "Completed",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             Expanded(
               child: ListView.builder(
@@ -288,19 +288,19 @@ class _HomeState extends State<Home> {
                                             _deleteTask(index, 1);
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("Yes")),
+                                          child: const Text("Yes", style: TextStyle(fontSize: 20))),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("No")),
+                                          child: const Text("No", style: TextStyle(fontSize: 20))),
                                     ],
                                   );
                                 });
                           },
                           child: CheckboxListTile(
                             title: Text(
-                                _tasksCompleted[index]['title'].toString()),
+                                _tasksCompleted[index]['title'].toString(), style: const TextStyle(letterSpacing: 1, fontSize: 17)),
                             value: _tasksCompleted[index]['status'],
                             onChanged: (bool? value) {
                               _changeTaskStatus(index, 1);
