@@ -154,42 +154,51 @@ class _HomeState extends State<Home> {
               child: ListView.builder(
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onDoubleTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text(
-                                "Are you sure you want to delete this task?",
-                                style: TextStyle(),
-                                textAlign: TextAlign.center,
-                              ),
-                              actionsAlignment: MainAxisAlignment.spaceAround,
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      _deleteTask(index, 0);
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("Yes")),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("No")),
-                              ],
-                            );
-                          });
-                    },
-                    child: CheckboxListTile(
-                      title: Text(_tasks[index]['title'].toString()),
-                      value: _tasks[index]['status'],
-                      onChanged: (bool? value) {
-                        _change(index, 0);
-                        _deleteTask(index, 0);
-                      },
-                    ),
+                  return Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {}, icon: Icon(EvaIcons.heart)),
+                      Expanded(
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      "Are you sure you want to delete this task?",
+                                      style: TextStyle(),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actionsAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            _deleteTask(index, 0);
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Yes")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("No")),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: CheckboxListTile(
+                            title: Text(_tasks[index]['title'].toString()),
+                            value: _tasks[index]['status'],
+                            onChanged: (bool? value) {
+                              _change(index, 0);
+                              _deleteTask(index, 0);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
@@ -199,47 +208,57 @@ class _HomeState extends State<Home> {
               style: TextStyle(fontSize: 20),
             ),
             Expanded(
-              flex: 1,
               child: ListView.builder(
+                shrinkWrap: true,
                 itemCount: _tasksCompleted.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onDoubleTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text(
-                                "Are you sure you want to delete this task?",
-                                style: TextStyle(),
-                                textAlign: TextAlign.center,
-                              ),
-                              actionsAlignment: MainAxisAlignment.spaceAround,
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      _deleteTask(index, 1);
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("Yes")),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("No")),
-                              ],
-                            );
-                          });
-                    },
-                    child: CheckboxListTile(
-                      secondary: GestureDetector(child: const Icon(EvaIcons.heartOutline)),
-                      title: Text(_tasksCompleted[index]['title'].toString()),
-                      value: _tasksCompleted[index]['status'],
-                      onChanged: (bool? value) {
-                        _change(index, 1);
-                        _deleteTask(index, 1);
-                      },
-                    ),
+                  return Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {}, icon: Icon(EvaIcons.heartOutline)),
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      "Are you sure you want to delete this task?",
+                                      style: TextStyle(),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actionsAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            _deleteTask(index, 1);
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Yes")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("No")),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: CheckboxListTile(
+                            title: Text(
+                                _tasksCompleted[index]['title'].toString()),
+                            value: _tasksCompleted[index]['status'],
+                            onChanged: (bool? value) {
+                              _change(index, 1);
+                              _deleteTask(index, 1);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
