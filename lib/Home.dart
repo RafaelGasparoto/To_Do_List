@@ -39,10 +39,18 @@ class _HomeState extends State<Home> {
   _change(int index, int who) async {
     if (who == 0) {
       _tasks[index]['status'] = true;
-      _tasksCompleted.add(_tasks[index]);
+      if(_tasks[index]['favorite']) {
+        _tasksCompleted.insert(0, _tasks[index]);
+      }else{
+        _tasksCompleted.add(_tasks[index]);
+      }
     } else {
       _tasksCompleted[index]['status'] = false;
-      _tasks.add(_tasksCompleted[index]);
+      if(_tasksCompleted[index]['favorite']) {
+        _tasks.insert(0, _tasksCompleted[index]);
+      }else {
+        _tasks.add(_tasksCompleted[index]);
+      }
     }
     _saveFile();
   }
@@ -77,12 +85,31 @@ class _HomeState extends State<Home> {
     }
   }
 
-  _favorite(index) async {
+  _favorite(index, who) async {
     setState(() {
-      var task = _tasks[index];
-      task['favorite'] = true;
-      _tasks.removeAt(index);
-      _tasks.insert(0, task);
+      if(who == 0){
+        var task = _tasks[index];
+        _tasks.removeAt(index);
+
+        if(task['favorite'] == true) {
+          task['favorite'] = false;
+          _tasks.add(task);
+        } else {
+          task['favorite'] = true;
+          _tasks.insert(0, task);
+        }
+      }else{
+        var task = _tasksCompleted[index];
+        _tasksCompleted.removeAt(index);
+
+        if(task['favorite'] == true) {
+          task['favorite'] = false;
+          _tasksCompleted.add(task);
+        } else {
+          task['favorite'] = true;
+          _tasksCompleted.insert(0, task);
+        }
+      }
     });
     _saveFile();
   }
@@ -169,7 +196,7 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _favorite(index);
+                            _favorite(index, 0);
                           },
                           icon: _tasks[index]['favorite']
                               ? const Icon(EvaIcons.heart)
@@ -232,9 +259,9 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _favorite(index);
+                            _favorite(index, 1);
                           },
-                          icon: _tasks[index]['favorite']
+                          icon: _tasksCompleted[index]['favorite']
                               ? const Icon(EvaIcons.heart)
                               : const Icon(EvaIcons.heartOutline)),
                       Expanded(
