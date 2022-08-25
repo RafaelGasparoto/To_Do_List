@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool _focused = false;
   final List _tasks = [];
   final List _tasksCompleted = [];
 
@@ -114,12 +113,6 @@ class _HomeState extends State<Home> {
       }
     });
     _saveFile();
-  }
-
-  void _handleHoverHighlight(bool value) {
-    setState(() {
-      _focused = value;
-    });
   }
 
   @override
@@ -296,6 +289,103 @@ class _HomeState extends State<Home> {
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
+                          onDoubleTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Choose an Icon for your task', style: TextStyle(fontSize: 20, letterSpacing: 1), textAlign: TextAlign.center,),
+                                    actionsPadding: const EdgeInsets.only(bottom: 20),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.wallet_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                                  const Icon(Icons.access_alarms_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                                  const Icon(Icons.shopping_cart_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                              const Icon(Icons.directions_run_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                              const Icon(Icons.directions_bike_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.shower_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.school_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.games_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.menu_book_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                              const Icon(Icons.email_sharp),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
                           onLongPress: () {
                             showDialog(
                                 context: context,
