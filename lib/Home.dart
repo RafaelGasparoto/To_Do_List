@@ -58,11 +58,12 @@ class _HomeState extends State<Home> {
 
   _saveFile() async {
     var file = await _getFile();
+    final List allTasks = [];
+    allTasks.addAll(_tasksCompleted);
+    allTasks.addAll(_tasks);
+    String data = json.encode(allTasks);
 
-    if (_tasksCompleted.isNotEmpty) {
-      String dataTasksCompleted = json.encode(_tasksCompleted);
-      file.writeAsString(dataTasksCompleted);
-    }
+    file.writeAsString(data);
   }
 
   _loadFile() async {
