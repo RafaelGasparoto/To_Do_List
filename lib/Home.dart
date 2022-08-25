@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _HomeState extends State<Home> {
     return File('${directory.path}/data.json');
   }
 
-  _saveTask() async {
+  _createTask() async {
     Map<String, dynamic> task = Map();
     task['title'] = _controller.text;
     task['status'] = false;
@@ -36,7 +37,7 @@ class _HomeState extends State<Home> {
     _controller.text = '';
   }
 
-  _change(int index, int who) async {
+  _changeTaskStatus(int index, int who) async {
     if (who == 0) {
       _tasks[index]['status'] = true;
       if(_tasks[index]['favorite']) {
@@ -85,7 +86,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  _favorite(index, who) async {
+  _favoriteTask(index, who) async {
     setState(() {
       if(who == 0){
         var task = _tasks[index];
@@ -151,7 +152,7 @@ class _HomeState extends State<Home> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text("To do"),
+                title: Text("To do", style: GoogleFonts.indieFlower(),),
                 content: TextField(
                   controller: _controller,
                   onChanged: (text) {},
@@ -161,7 +162,7 @@ class _HomeState extends State<Home> {
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        _saveTask();
+                        _createTask();
                       },
                       child: const Text("Save")),
                   TextButton(
@@ -185,7 +186,7 @@ class _HomeState extends State<Home> {
           children: [
             const Text(
               "To Do",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 30),
             ),
             Expanded(
               flex: 1,
@@ -196,14 +197,14 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _favorite(index, 0);
+                            _favoriteTask(index, 0);
                           },
                           icon: _tasks[index]['favorite']
                               ? const Icon(EvaIcons.heart)
                               : const Icon(EvaIcons.heartOutline)),
                       Expanded(
                         child: GestureDetector(
-                          onDoubleTap: () {
+                          onLongPress: () {
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -235,7 +236,7 @@ class _HomeState extends State<Home> {
                             title: Text(_tasks[index]['title'].toString()),
                             value: _tasks[index]['status'],
                             onChanged: (bool? value) {
-                              _change(index, 0);
+                              _changeTaskStatus(index, 0);
                               _deleteTask(index, 0);
                             },
                           ),
@@ -247,7 +248,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             const Text(
-              "Complete",
+              "Completed",
               style: TextStyle(fontSize: 20),
             ),
             Expanded(
@@ -259,7 +260,7 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _favorite(index, 1);
+                            _favoriteTask(index, 1);
                           },
                           icon: _tasksCompleted[index]['favorite']
                               ? const Icon(EvaIcons.heart)
@@ -267,14 +268,16 @@ class _HomeState extends State<Home> {
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
-                          onDoubleTap: () {
+                          onLongPress: () {
                             showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    title: const Text(
+                                    title: Text(
                                       "Are you sure you want to delete this task?",
-                                      style: TextStyle(),
+                                      style: GoogleFonts.indieFlower(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                     actionsAlignment:
@@ -300,7 +303,7 @@ class _HomeState extends State<Home> {
                                 _tasksCompleted[index]['title'].toString()),
                             value: _tasksCompleted[index]['status'],
                             onChanged: (bool? value) {
-                              _change(index, 1);
+                              _changeTaskStatus(index, 1);
                               _deleteTask(index, 1);
                             },
                           ),
