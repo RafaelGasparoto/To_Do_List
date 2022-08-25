@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,6 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool _focused = false;
   final List _tasks = [];
   final List _tasksCompleted = [];
 
@@ -115,6 +116,12 @@ class _HomeState extends State<Home> {
     _saveFile();
   }
 
+  void _handleHoverHighlight(bool value) {
+    setState(() {
+      _focused = value;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -184,7 +191,8 @@ class _HomeState extends State<Home> {
       ),
       body: Container(
         color: Colors.white,
-        padding: const EdgeInsets.only(top: 30, bottom: 30, right: 10, left: 10),
+        padding:
+            const EdgeInsets.only(top: 30, bottom: 30, right: 10, left: 10),
         child: Column(
           children: [
             const Text(
@@ -213,9 +221,11 @@ class _HomeState extends State<Home> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "Are you sure you want to delete '${_tasks[index]['title']}' task?",
+                                      "Are you sure you want to delete ( ${_tasksCompleted[index]['title']} ) task?",
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1,
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                     actionsAlignment:
@@ -241,7 +251,10 @@ class _HomeState extends State<Home> {
                                 });
                           },
                           child: Theme(
-                            data: ThemeData(unselectedWidgetColor: const Color(0xff4CDBF2)),
+                            data: ThemeData(
+                              textTheme: GoogleFonts.indieFlowerTextTheme(),
+                              unselectedWidgetColor: const Color(0xff4CDBF2),
+                            ),
                             child: CheckboxListTile(
                               title: Text(
                                 _tasks[index]['title'].toString(),
@@ -289,10 +302,10 @@ class _HomeState extends State<Home> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "Are you sure you want to delete '${_tasksCompleted[index]['title']}' task?",
-                                      style: GoogleFonts.indieFlower(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      "Are you sure you want to delete ( ${_tasksCompleted[index]['title']} ) task?",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1),
                                       textAlign: TextAlign.center,
                                     ),
                                     actionsAlignment:
