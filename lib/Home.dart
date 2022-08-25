@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -102,7 +103,9 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("To do List"),
+        backgroundColor: const Color(0xff523961),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         elevation: 8,
         onPressed: () {
@@ -133,12 +136,13 @@ class _HomeState extends State<Home> {
             },
           );
         },
-        foregroundColor: Colors.purple,
-        backgroundColor: Colors.red,
+        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xffb380cc),
         child: const Icon(Icons.add),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 15, bottom: 15),
+      body: Container(
+        color: const Color(0xffbaafc4),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
             const Text(
@@ -228,6 +232,7 @@ class _HomeState extends State<Home> {
                           });
                     },
                     child: CheckboxListTile(
+                      secondary: GestureDetector(child: const Icon(EvaIcons.heartOutline)),
                       title: Text(_tasksCompleted[index]['title'].toString()),
                       value: _tasksCompleted[index]['status'],
                       onChanged: (bool? value) {
@@ -237,6 +242,21 @@ class _HomeState extends State<Home> {
                     ),
                   );
                 },
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: const Color(0xff523961),
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          children: [
+            Opacity(
+              opacity: 0,
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.add),
               ),
             ),
           ],
