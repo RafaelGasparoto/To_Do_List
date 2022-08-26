@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
     _controller.text = '';
   }
 
-  _selectIcon(index, List task){
+  _selectIcon(index, List task) {
     if (task[index]['icon'] == 'check_icon') {
       return const Icon(Icons.check);
     } else if (task[index]['icon'] == 'alarm_icon') {
@@ -47,8 +47,7 @@ class _HomeState extends State<Home> {
       return const Icon(Icons.shopping_cart_sharp);
     } else if (task[index]['icon'] == 'direction_icon') {
       return const Icon(Icons.directions_run_sharp);
-    } else if (task[index]['icon'] ==
-        'direction_bike_icon') {
+    } else if (task[index]['icon'] == 'direction_bike_icon') {
       return const Icon(Icons.directions_bike_sharp);
     } else if (task[index]['icon'] == 'shower_icon') {
       return const Icon(Icons.shower_sharp);
@@ -63,7 +62,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  _changeIcon(task, String icon){
+  _changeIcon(task, String icon) {
     setState(() {
       task['icon'] = icon;
     });
@@ -245,141 +244,157 @@ class _HomeState extends State<Home> {
                       })),
                       Expanded(
                         child: GestureDetector(
-                          onDoubleTap: (){
-                            showDialog(context: context, builder: (context){
-                              return AlertDialog(
-                                title: const Text(
-                                  'Choose an Icon for your task',
-                                  style: TextStyle(
-                                      fontSize: 20, letterSpacing: 1),
-                                  textAlign: TextAlign.center,
-                                ),
-                                actionsPadding:
-                                const EdgeInsets.only(bottom: 20),
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.wallet_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'wallet_icon');
-                                          },
-                                        ),
+                          behavior: HitTestBehavior.opaque,
+                          onDoubleTap: () => setState(
+                            () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      'Choose an Icon for your task',
+                                      style: TextStyle(
+                                          fontSize: 20, letterSpacing: 1),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actionsPadding:
+                                        const EdgeInsets.only(bottom: 20),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.wallet_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'wallet_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.access_alarms_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'alarm_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.shopping_cart_sharp),
+                                              onPressed: () {
+                                                _changeIcon(
+                                                    _tasks[index], 'shop_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.directions_run_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'direction_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.directions_bike_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'direction_bike_icon');
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.access_alarms_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'alarm_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.shopping_cart_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'shop_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.directions_run_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'direction_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.directions_bike_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'direction_bike_icon');
-                                          },
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.shower_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'shower_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.school_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'school_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                                  const Icon(Icons.games_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'games_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.menu_book_sharp),
+                                              onPressed: () {
+                                                _changeIcon(
+                                                    _tasks[index], 'book_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                                  const Icon(Icons.email_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasks[index],
+                                                    'email_icon');
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.shower_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'shower_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.school_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'school_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon:
-                                          const Icon(Icons.games_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'game_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.menu_book_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'book_icon');
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon:
-                                          const Icon(Icons.email_sharp),
-                                          onPressed: () {
-                                            _changeIcon(_tasks[index], 'email_icon');
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                  );
+                                },
                               );
-                            });
-                          },
-                          onSecondaryLongPress: () {
+                            },
+                          ),
+                          onLongPress: () => setState(() {
                             showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "Are you sure you want to delete ( ${_tasksCompleted[index]['title']} ) task?",
+                                      "Are you sure you want to delete ( ${_tasks[index]['title']} ) task?",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         letterSpacing: 1,
@@ -407,7 +422,7 @@ class _HomeState extends State<Home> {
                                     ],
                                   );
                                 });
-                          },
+                          }),
                           child: Theme(
                             data: ThemeData(
                               textTheme: GoogleFonts.indieFlowerTextTheme(),
