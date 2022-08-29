@@ -38,24 +38,26 @@ class _HomeState extends State<Home> {
     _controller.text = '';
   }
 
-  _selectIcon(index, List task) {
-    if (task[index]['icon'] == 'check_icon') {
+  _selectIcon(task) {
+    if (task['icon'] == 'check_icon') {
       return const Icon(Icons.check);
-    } else if (task[index]['icon'] == 'alarm_icon') {
+    } else if (task['icon'] == 'alarm_icon') {
       return const Icon(Icons.access_alarms_sharp);
-    } else if (task[index]['icon'] == 'shop_icon') {
+    } else if (task['icon'] == 'wallet_icon') {
+      return const Icon(Icons.wallet_sharp);
+    } else if (task['icon'] == 'shop_icon') {
       return const Icon(Icons.shopping_cart_sharp);
-    } else if (task[index]['icon'] == 'direction_icon') {
+    } else if (task['icon'] == 'direction_icon') {
       return const Icon(Icons.directions_run_sharp);
-    } else if (task[index]['icon'] == 'direction_bike_icon') {
+    } else if (task['icon'] == 'direction_bike_icon') {
       return const Icon(Icons.directions_bike_sharp);
-    } else if (task[index]['icon'] == 'shower_icon') {
+    } else if (task['icon'] == 'shower_icon') {
       return const Icon(Icons.shower_sharp);
-    } else if (task[index]['icon'] == 'school_icon') {
+    } else if (task['icon'] == 'school_icon') {
       return const Icon(Icons.school_sharp);
-    } else if (task[index]['icon'] == 'games_icon') {
+    } else if (task['icon'] == 'games_icon') {
       return const Icon(Icons.games_sharp);
-    } else if (task[index]['icon'] == 'book_icon') {
+    } else if (task['icon'] == 'book_icon') {
       return const Icon(Icons.menu_book_sharp);
     } else {
       return const Icon(Icons.email_sharp);
@@ -70,22 +72,19 @@ class _HomeState extends State<Home> {
     Navigator.pop(context);
   }
 
-  _changeTaskStatus(int index, int who) async {
-    if (who == 0) {
-      _tasks[index]['status'] = true;
-      if (_tasks[index]['favorite']) {
-        _tasksCompleted.insert(0, _tasks[index]);
-      } else {
-        _tasksCompleted.add(_tasks[index]);
-      }
-    } else {
-      _tasksCompleted[index]['status'] = false;
-      if (_tasksCompleted[index]['favorite']) {
-        _tasks.insert(0, _tasksCompleted[index]);
-      } else {
-        _tasks.add(_tasksCompleted[index]);
-      }
+  _changeTaskStatus(task, List tasks) async {
+    if (task['status'] == false) {
+      task['status'] = true;
+    }else{
+      task['status'] = false;
     }
+
+    if (task['favorite'] == true) {
+      tasks.insert(0, task);
+    } else {
+      tasks.add(task);
+    }
+
     _saveFile();
   }
 
@@ -239,9 +238,11 @@ class _HomeState extends State<Home> {
                           icon: _tasks[index]['favorite']
                               ? const Icon(EvaIcons.heart)
                               : const Icon(EvaIcons.heartOutline)),
-                      FutureBuilder(builder: ((contex, builder) {
-                        return _selectIcon(index, _tasks);
-                      })),
+                      FutureBuilder(
+                        builder: ((contex, builder) {
+                          return _selectIcon(_tasks[index]);
+                        }),
+                      ),
                       Expanded(
                         child: GestureDetector(
                           behavior: HitTestBehavior.opaque,
@@ -388,8 +389,9 @@ class _HomeState extends State<Home> {
                               );
                             },
                           ),
-                          onLongPress: () => setState(() {
-                            showDialog(
+                          onLongPress: () => setState(
+                            () {
+                              showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
@@ -421,8 +423,10 @@ class _HomeState extends State<Home> {
                                               style: TextStyle(fontSize: 20))),
                                     ],
                                   );
-                                });
-                          }),
+                                },
+                              );
+                            },
+                          ),
                           child: Theme(
                             data: ThemeData(
                               textTheme: GoogleFonts.indieFlowerTextTheme(),
@@ -436,7 +440,7 @@ class _HomeState extends State<Home> {
                               ),
                               value: _tasks[index]['status'],
                               onChanged: (bool? value) {
-                                _changeTaskStatus(index, 0);
+                                _changeTaskStatus(_tasks[index], _tasksCompleted);
                                 _deleteTask(index, 0);
                               },
                             ),
@@ -466,19 +470,169 @@ class _HomeState extends State<Home> {
                           icon: _tasksCompleted[index]['favorite']
                               ? const Icon(EvaIcons.heart)
                               : const Icon(EvaIcons.heartOutline)),
+                      FutureBuilder(
+                        builder: ((contex, builder) {
+                          return _selectIcon(_tasksCompleted[index]);
+                        }),
+                      ),
                       Expanded(
                         flex: 1,
                         child: GestureDetector(
-                          onLongPress: () {
-                            showDialog(
+                          onDoubleTap: () => setState(
+                            () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      'Choose an Icon for your task',
+                                      style: TextStyle(
+                                          fontSize: 20, letterSpacing: 1),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actionsPadding:
+                                        const EdgeInsets.only(bottom: 20),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.wallet_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'wallet_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.access_alarms_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'alarm_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.shopping_cart_sharp),
+                                              onPressed: () {
+                                                _changeIcon(
+                                                    _tasksCompleted[index], 'shop_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.directions_run_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'direction_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.directions_bike_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'direction_bike_icon');
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.shower_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'shower_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.school_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'school_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                                  const Icon(Icons.games_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'games_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.menu_book_sharp),
+                                              onPressed: () {
+                                                _changeIcon(
+                                                    _tasksCompleted[index], 'book_icon');
+                                              },
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: IconButton(
+                                              icon:
+                                                  const Icon(Icons.email_sharp),
+                                              onPressed: () {
+                                                _changeIcon(_tasksCompleted[index],
+                                                    'email_icon');
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          onLongPress: () => setState(
+                            () {
+                              showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
                                       "Are you sure you want to delete ( ${_tasksCompleted[index]['title']} ) task?",
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1),
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1,
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                     actionsAlignment:
@@ -489,8 +643,10 @@ class _HomeState extends State<Home> {
                                             _deleteTask(index, 1);
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("Yes",
-                                              style: TextStyle(fontSize: 20))),
+                                          child: const Text(
+                                            "Yes",
+                                            style: TextStyle(fontSize: 20),
+                                          )),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
@@ -499,8 +655,10 @@ class _HomeState extends State<Home> {
                                               style: TextStyle(fontSize: 20))),
                                     ],
                                   );
-                                });
-                          },
+                                },
+                              );
+                            },
+                          ),
                           child: CheckboxListTile(
                             activeColor: const Color(0xff4CDBF2),
                             checkColor: Colors.black,
@@ -510,7 +668,7 @@ class _HomeState extends State<Home> {
                                     letterSpacing: 1, fontSize: 17)),
                             value: _tasksCompleted[index]['status'],
                             onChanged: (bool? value) {
-                              _changeTaskStatus(index, 1);
+                              _changeTaskStatus(_tasksCompleted[index], _tasks);
                               _deleteTask(index, 1);
                             },
                           ),
