@@ -88,13 +88,9 @@ class _HomeState extends State<Home> {
     _saveFile();
   }
 
-  _deleteTask(int index, int who) async {
+  _deleteTask(List task, int index) async {
     setState(() {
-      if (who == 0) {
-        _tasks.removeAt(index);
-      } else {
-        _tasksCompleted.removeAt(index);
-      }
+      task.removeAt(index);
     });
     _saveFile();
   }
@@ -408,7 +404,7 @@ class _HomeState extends State<Home> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
-                                            _deleteTask(index, 0);
+                                            _deleteTask(_tasks, index);
                                             Navigator.pop(context);
                                           },
                                           child: const Text(
@@ -441,7 +437,7 @@ class _HomeState extends State<Home> {
                               value: _tasks[index]['status'],
                               onChanged: (bool? value) {
                                 _changeTaskStatus(_tasks[index], _tasksCompleted);
-                                _deleteTask(index, 0);
+                                _deleteTask(_tasks, index);
                               },
                             ),
                           ),
@@ -640,7 +636,7 @@ class _HomeState extends State<Home> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
-                                            _deleteTask(index, 1);
+                                            _deleteTask(_tasksCompleted, index);
                                             Navigator.pop(context);
                                           },
                                           child: const Text(
@@ -669,7 +665,7 @@ class _HomeState extends State<Home> {
                             value: _tasksCompleted[index]['status'],
                             onChanged: (bool? value) {
                               _changeTaskStatus(_tasksCompleted[index], _tasks);
-                              _deleteTask(index, 1);
+                              _deleteTask(_tasksCompleted, index);
                             },
                           ),
                         ),
