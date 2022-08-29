@@ -23,6 +23,38 @@ class _HomeState extends State<Home> {
     return File('${directory.path}/data.json');
   }
 
+  _dialogAlertDeleteTasks(tasks, index){
+    return AlertDialog(
+      title: Text(
+        "Are you sure you want to delete ( ${tasks[index]['title']} ) task?",
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      actionsAlignment:
+      MainAxisAlignment.spaceAround,
+      actions: [
+        TextButton(
+            onPressed: () {
+              _deleteTask(tasks, index);
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "Yes",
+              style: TextStyle(fontSize: 20),
+            )),
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("No",
+                style: TextStyle(fontSize: 20))),
+      ],
+    );
+  }
+
   _dialogAlertIcons(task) {
     return AlertDialog(
       title: const Text(
@@ -353,35 +385,7 @@ class _HomeState extends State<Home> {
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Are you sure you want to delete ( ${_tasks[index]['title']} ) task?",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    actionsAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            _deleteTask(_tasks, index);
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text(
-                                            "Yes",
-                                            style: TextStyle(fontSize: 20),
-                                          )),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("No",
-                                              style: TextStyle(fontSize: 20))),
-                                    ],
-                                  );
+                                  return _dialogAlertDeleteTasks(_tasks, index);
                                 },
                               );
                             },
@@ -453,35 +457,7 @@ class _HomeState extends State<Home> {
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Are you sure you want to delete ( ${_tasksCompleted[index]['title']} ) task?",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    actionsAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            _deleteTask(_tasksCompleted, index);
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text(
-                                            "Yes",
-                                            style: TextStyle(fontSize: 20),
-                                          )),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("No",
-                                              style: TextStyle(fontSize: 20))),
-                                    ],
-                                  );
+                                  return _dialogAlertDeleteTasks(_tasksCompleted, index);
                                 },
                               );
                             },
