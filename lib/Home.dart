@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
   _changeTaskStatus(task, List tasks) async {
     if (task['status'] == false) {
       task['status'] = true;
-    }else{
+    } else {
       task['status'] = false;
     }
 
@@ -114,30 +114,17 @@ class _HomeState extends State<Home> {
     }
   }
 
-  _favoriteTask(index, who) async {
+  _favoriteTask(List tasks, index) async {
     setState(() {
-      if (who == 0) {
-        var task = _tasks[index];
-        _tasks.removeAt(index);
+      var task = tasks[index];
+      tasks.removeAt(index);
 
-        if (task['favorite'] == true) {
-          task['favorite'] = false;
-          _tasks.add(task);
-        } else {
-          task['favorite'] = true;
-          _tasks.insert(0, task);
-        }
+      if (task['favorite'] == true) {
+        task['favorite'] = false;
+        tasks.add(task);
       } else {
-        var task = _tasksCompleted[index];
-        _tasksCompleted.removeAt(index);
-
-        if (task['favorite'] == true) {
-          task['favorite'] = false;
-          _tasksCompleted.add(task);
-        } else {
-          task['favorite'] = true;
-          _tasksCompleted.insert(0, task);
-        }
+        task['favorite'] = true;
+        tasks.insert(0, task);
       }
     });
     _saveFile();
@@ -229,7 +216,7 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _favoriteTask(index, 0);
+                            _favoriteTask(_tasks, index);
                           },
                           icon: _tasks[index]['favorite']
                               ? const Icon(EvaIcons.heart)
@@ -436,7 +423,8 @@ class _HomeState extends State<Home> {
                               ),
                               value: _tasks[index]['status'],
                               onChanged: (bool? value) {
-                                _changeTaskStatus(_tasks[index], _tasksCompleted);
+                                _changeTaskStatus(
+                                    _tasks[index], _tasksCompleted);
                                 _deleteTask(_tasks, index);
                               },
                             ),
@@ -461,7 +449,7 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _favoriteTask(index, 1);
+                            _favoriteTask(_tasksCompleted, index);
                           },
                           icon: _tasksCompleted[index]['favorite']
                               ? const Icon(EvaIcons.heart)
@@ -499,7 +487,8 @@ class _HomeState extends State<Home> {
                                               icon: const Icon(
                                                   Icons.wallet_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'wallet_icon');
                                               },
                                             ),
@@ -510,7 +499,8 @@ class _HomeState extends State<Home> {
                                               icon: const Icon(
                                                   Icons.access_alarms_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'alarm_icon');
                                               },
                                             ),
@@ -522,7 +512,8 @@ class _HomeState extends State<Home> {
                                                   Icons.shopping_cart_sharp),
                                               onPressed: () {
                                                 _changeIcon(
-                                                    _tasksCompleted[index], 'shop_icon');
+                                                    _tasksCompleted[index],
+                                                    'shop_icon');
                                               },
                                             ),
                                           ),
@@ -532,7 +523,8 @@ class _HomeState extends State<Home> {
                                               icon: const Icon(
                                                   Icons.directions_run_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'direction_icon');
                                               },
                                             ),
@@ -543,7 +535,8 @@ class _HomeState extends State<Home> {
                                               icon: const Icon(
                                                   Icons.directions_bike_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'direction_bike_icon');
                                               },
                                             ),
@@ -560,7 +553,8 @@ class _HomeState extends State<Home> {
                                               icon: const Icon(
                                                   Icons.shower_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'shower_icon');
                                               },
                                             ),
@@ -571,7 +565,8 @@ class _HomeState extends State<Home> {
                                               icon: const Icon(
                                                   Icons.school_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'school_icon');
                                               },
                                             ),
@@ -582,7 +577,8 @@ class _HomeState extends State<Home> {
                                               icon:
                                                   const Icon(Icons.games_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'games_icon');
                                               },
                                             ),
@@ -594,7 +590,8 @@ class _HomeState extends State<Home> {
                                                   Icons.menu_book_sharp),
                                               onPressed: () {
                                                 _changeIcon(
-                                                    _tasksCompleted[index], 'book_icon');
+                                                    _tasksCompleted[index],
+                                                    'book_icon');
                                               },
                                             ),
                                           ),
@@ -604,7 +601,8 @@ class _HomeState extends State<Home> {
                                               icon:
                                                   const Icon(Icons.email_sharp),
                                               onPressed: () {
-                                                _changeIcon(_tasksCompleted[index],
+                                                _changeIcon(
+                                                    _tasksCompleted[index],
                                                     'email_icon');
                                               },
                                             ),
