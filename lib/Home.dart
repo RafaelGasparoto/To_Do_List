@@ -73,11 +73,8 @@ class _HomeState extends State<Home> {
   }
 
   _changeTaskStatus(task, List tasks) async {
-    if (task['status'] == false) {
-      task['status'] = true;
-    } else {
-      task['status'] = false;
-    }
+
+    task['status']  = task['status'] ? false : true;
 
     if (task['favorite'] == true) {
       tasks.insert(0, task);
