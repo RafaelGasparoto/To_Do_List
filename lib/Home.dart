@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     return File('${directory.path}/data.json');
   }
 
-  _dialogAlertDeleteTasks(tasks, index){
+  _dialogAlertDeleteTasks(List tasks, index) {
     return AlertDialog(
       title: Text(
         "Are you sure you want to delete ( ${tasks[index]['title']} ) task?",
@@ -33,13 +33,12 @@ class _HomeState extends State<Home> {
         ),
         textAlign: TextAlign.center,
       ),
-      actionsAlignment:
-      MainAxisAlignment.spaceAround,
+      actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         TextButton(
             onPressed: () {
               _deleteTask(tasks, index);
-              Navigator.pop(context);
+              Navigator.of(context).pop(true);
             },
             child: const Text(
               "Yes",
@@ -47,10 +46,9 @@ class _HomeState extends State<Home> {
             )),
         TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop(false);
             },
-            child: const Text("No",
-                style: TextStyle(fontSize: 20))),
+            child: const Text("No", style: TextStyle(fontSize: 20))),
       ],
     );
   }
@@ -219,7 +217,6 @@ class _HomeState extends State<Home> {
 
   _changeTaskStatus(task, List tasks) async {
     task['status'] = task['status'] ? false : true;
-
     if (task['favorite'] == true) {
       tasks.insert(0, task);
     } else {
@@ -275,9 +272,9 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _loadFile().then(
-      (data) {
+          (data) {
         setState(
-          () {
+              () {
             List task = json.decode(data);
             for (var i = 0; i < task.length; i++) {
               if (task[i]['status'] == false) {
@@ -322,13 +319,13 @@ class _HomeState extends State<Home> {
                         }
                       },
                       child:
-                          const Text("Save", style: TextStyle(fontSize: 20))),
+                      const Text("Save", style: TextStyle(fontSize: 20))),
                   TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
                       child:
-                          const Text("Cancel", style: TextStyle(fontSize: 20))),
+                      const Text("Cancel", style: TextStyle(fontSize: 20))),
                 ],
               );
             },
@@ -341,7 +338,7 @@ class _HomeState extends State<Home> {
       body: Container(
         color: Colors.white,
         padding:
-            const EdgeInsets.only(top: 30, bottom: 30, right: 10, left: 10),
+        const EdgeInsets.only(top: 30, bottom: 30, right: 10, left: 10),
         child: Column(
           children: [
             const Text(
@@ -353,65 +350,82 @@ class _HomeState extends State<Home> {
               child: ListView.builder(
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            _favoriteTask(_tasks, index);
-                          },
-                          icon: _tasks[index]['favorite']
-                              ? const Icon(EvaIcons.heart)
-                              : const Icon(EvaIcons.heartOutline)),
-                      FutureBuilder(
-                        builder: ((contex, builder) {
-                          return _selectIcon(_tasks[index]);
-                        }),
+                  return Dismissible(
+                    key: Key(_tasks[index]['title']),
+                    background: Container(
+                      color: Colors.red,
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          Icon(Icons.delete),
+                        ],
                       ),
-                      Expanded(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onDoubleTap: () => setState(
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return _dialogAlertIcons(_tasks[index]);
-                                },
-                              );
+                    ),
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return _dialogAlertDeleteTasks(_tasks, index);
+                          });
+                    },
+                    onDismissed: (direction) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return _dialogAlertDeleteTasks(_tasks, index);
+                          });
+                    },
+                    child: Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              _favoriteTask(_tasks, index);
                             },
-                          ),
-                          onLongPress: () => setState(
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return _dialogAlertDeleteTasks(_tasks, index);
-                                },
-                              );
-                            },
-                          ),
-                          child: Theme(
-                            data: ThemeData(
-                              textTheme: GoogleFonts.indieFlowerTextTheme(),
-                              unselectedWidgetColor: const Color(0xff4CDBF2),
-                            ),
-                            child: CheckboxListTile(
-                              title: Text(
-                                _tasks[index]['title'].toString(),
-                                style: const TextStyle(
-                                    letterSpacing: 1, fontSize: 17),
-                              ),
-                              value: _tasks[index]['status'],
-                              onChanged: (bool? value) {
-                                _changeTaskStatus(
-                                    _tasks[index], _tasksCompleted);
-                                _deleteTask(_tasks, index);
+                            icon: _tasks[index]['favorite']
+                                ? const Icon(EvaIcons.heart)
+                                : const Icon(EvaIcons.heartOutline)),
+                        FutureBuilder(
+                          builder: ((contex, builder) {
+                            return _selectIcon(_tasks[index]);
+                          }),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onDoubleTap: () => setState(
+                                  () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return _dialogAlertIcons(_tasks[index]);
+                                  },
+                                );
                               },
+                            ),
+                            child: Theme(
+                              data: ThemeData(
+                                textTheme: GoogleFonts.indieFlowerTextTheme(),
+                                unselectedWidgetColor: const Color(0xff4CDBF2),
+                              ),
+                              child: CheckboxListTile(
+                                title: Text(
+                                  _tasks[index]['title'].toString(),
+                                  style: const TextStyle(
+                                      letterSpacing: 1, fontSize: 17),
+                                ),
+                                value: _tasks[index]['status'],
+                                onChanged: (bool? value) {
+                                  _changeTaskStatus(
+                                      _tasks[index], _tasksCompleted);
+                                  _deleteTask(_tasks, index);
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),
@@ -425,59 +439,83 @@ class _HomeState extends State<Home> {
                 shrinkWrap: true,
                 itemCount: _tasksCompleted.length,
                 itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            _favoriteTask(_tasksCompleted, index);
-                          },
-                          icon: _tasksCompleted[index]['favorite']
-                              ? const Icon(EvaIcons.heart)
-                              : const Icon(EvaIcons.heartOutline)),
-                      FutureBuilder(
-                        builder: ((contex, builder) {
-                          return _selectIcon(_tasksCompleted[index]);
-                        }),
+                  return Dismissible(
+                    key: Key(_tasksCompleted[index]['title']),
+                    direction: DismissDirection.endToStart,
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return _dialogAlertDeleteTasks(
+                                _tasksCompleted, index);
+                          });
+                    },
+                    background: Container(
+                      padding: const EdgeInsets.all(16),
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          Icon(Icons.delete),
+                        ],
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: GestureDetector(
-                          onDoubleTap: () => setState(
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return _dialogAlertIcons(_tasksCompleted[index]);
-                                },
-                              );
+                    ),
+                    onDismissed: (direction) {
+                      if (direction == DismissDirection.endToStart) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return _dialogAlertDeleteTasks(
+                                  _tasksCompleted, index);
+                            });
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              _favoriteTask(_tasksCompleted, index);
                             },
-                          ),
-                          onLongPress: () => setState(
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return _dialogAlertDeleteTasks(_tasksCompleted, index);
-                                },
-                              );
-                            },
-                          ),
-                          child: CheckboxListTile(
-                            activeColor: const Color(0xff4CDBF2),
-                            checkColor: Colors.black,
-                            title: Text(
-                                _tasksCompleted[index]['title'].toString(),
-                                style: const TextStyle(
-                                    letterSpacing: 1, fontSize: 17)),
-                            value: _tasksCompleted[index]['status'],
-                            onChanged: (bool? value) {
-                              _changeTaskStatus(_tasksCompleted[index], _tasks);
-                              _deleteTask(_tasksCompleted, index);
-                            },
+                            icon: _tasksCompleted[index]['favorite']
+                                ? const Icon(EvaIcons.heart)
+                                : const Icon(EvaIcons.heartOutline)),
+                        FutureBuilder(
+                          builder: ((contex, builder) {
+                            return _selectIcon(_tasksCompleted[index]);
+                          }),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: GestureDetector(
+                            onDoubleTap: () => setState(
+                                  () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return _dialogAlertIcons(
+                                        _tasksCompleted[index]);
+                                  },
+                                );
+                              },
+                            ),
+                            child: CheckboxListTile(
+                              activeColor: const Color(0xff4CDBF2),
+                              checkColor: Colors.black,
+                              title: Text(
+                                  _tasksCompleted[index]['title'].toString(),
+                                  style: const TextStyle(
+                                      letterSpacing: 1, fontSize: 17)),
+                              value: _tasksCompleted[index]['status'],
+                              onChanged: (bool? value) {
+                                _changeTaskStatus(
+                                    _tasksCompleted[index], _tasks);
+                                _deleteTask(_tasksCompleted, index);
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),
