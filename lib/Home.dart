@@ -15,42 +15,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final List _tasks = [];
   final List _tasksCompleted = [];
+  late Map<String, dynamic> _deletedTask;
 
   final TextEditingController _controller = TextEditingController();
 
   Future<File> _getFile() async {
     Directory directory = await getApplicationDocumentsDirectory();
     return File('${directory.path}/data.json');
-  }
-
-  _dialogAlertDeleteTasks(List tasks, index) {
-    return AlertDialog(
-      title: Text(
-        "Are you sure you want to delete ( ${tasks[index]['title']} ) task?",
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      actionsAlignment: MainAxisAlignment.spaceAround,
-      actions: [
-        TextButton(
-            onPressed: () {
-              _deleteTask(tasks, index);
-              Navigator.of(context).pop(true);
-            },
-            child: const Text(
-              "Yes",
-              style: TextStyle(fontSize: 20),
-            )),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            child: const Text("No", style: TextStyle(fontSize: 20))),
-      ],
-    );
   }
 
   _dialogAlertIcons(task) {
@@ -351,7 +322,7 @@ class _HomeState extends State<Home> {
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
-                    key: Key(_tasks[index]['title']),
+                    key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
                     background: Container(
                       color: Colors.red,
                       padding: const EdgeInsets.all(16),
@@ -362,19 +333,16 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
-                    confirmDismiss: (direction) async {
-                      return await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return _dialogAlertDeleteTasks(_tasks, index);
-                          });
-                    },
+                    direction: DismissDirection.endToStart,
                     onDismissed: (direction) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return _dialogAlertDeleteTasks(_tasks, index);
-                          });
+                      _deletedTask = _tasks[index];
+                      _deleteTask(_tasks, index);
+                      final snackBar = SnackBar(content: const Text("Task deleted"), duration: const Duration(seconds: 5), action: SnackBarAction(label: 'Undo', onPressed: (){
+                        setState(() {
+                          _tasks.insert(index, _deletedTask);
+                        });
+                      }),);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     child: Row(
                       children: [
@@ -440,16 +408,7 @@ class _HomeState extends State<Home> {
                 itemCount: _tasksCompleted.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
-                    key: Key(_tasksCompleted[index]['title']),
-                    direction: DismissDirection.endToStart,
-                    confirmDismiss: (direction) async {
-                      return await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return _dialogAlertDeleteTasks(
-                                _tasksCompleted, index);
-                          });
-                    },
+                    key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
                     background: Container(
                       padding: const EdgeInsets.all(16),
                       color: Colors.red,
@@ -460,15 +419,16 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
+                    direction: DismissDirection.endToStart,
                     onDismissed: (direction) {
-                      if (direction == DismissDirection.endToStart) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return _dialogAlertDeleteTasks(
-                                  _tasksCompleted, index);
-                            });
-                      }
+                      _deletedTask = _tasksCompleted[index];
+                      _deleteTask(_tasksCompleted, index);
+                      final snackBar = SnackBar(content: const Text("Task deleted"), duration: const Duration(seconds: 5), action: SnackBarAction(label: 'Undo', onPressed: (){
+                        setState(() {
+                          _tasksCompleted.insert(index, _deletedTask);
+                        });
+                      }),);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     child: Row(
                       children: [
